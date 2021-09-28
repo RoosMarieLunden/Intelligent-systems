@@ -1,0 +1,36 @@
+raekoda
+raeapteek
+viruvarav
+draamateater
+vabadusevaljak
+niguliste
+korstnapyhkija
+
+{
+    "raekoda":["raeapteek","viruvarav","niguliste"],
+    "raeapteek":["raekoda"],
+    "viruvarav":["raekoda", "draamateater"],
+    "draamateater":["viruvarav","vabadusevaljak","korstnapyhkija"],
+    "vabadusevaljak";["niguliste","draamateater","korstnapyhkija"],
+    "niguliste":["vabadusevaljak","korstnapyhkija","raekoda"],
+    "korstnapyhkija":["vabadusevaljak","niguliste","draamateater"]
+}
+
+draamateater- vabadusevaljak -  draamateater
+draamateater vabadusevaljak-korstnapyhkija
+draamateater - viruvarav - draamateater
+draamateater -viruvarav - raekoda
+
+draamateater- korstnapyhkija -draamateater
+draamateater -korstnapyhkija- vabadusevaljak
+draamateater- korstnapyhkija - niguliste
+
+
+pean mööduma korstnapyhkijast
+draamateater - raekoda raeapteek
+draamateater -raekoda - draamateater
+draamateater -raekoda  -viruvarav
+draamateater -raekoda - korstnapyhkija
+
+
+<!Doc>

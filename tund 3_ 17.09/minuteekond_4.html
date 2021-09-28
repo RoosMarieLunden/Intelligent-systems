@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Otsing</title>
+    <script>
+       let g;
+       let ala=[];
+       let algVajutus=null;
+       let parimTeekond=null;
+       let suunad=[[0, -1], [1, 0], [0, 1], [-1, 0]];
+       function algus(){
+          g=tahvel.getContext("2d");
+          uuenda();
+       }
+       function uuenda(){
+          loeAndmed();
+          joonista();       
+       }
+       function ey(koht){
+          return (koht[0]+0.5)*reakorgus;
+       }
+       function ex(koht){
+          return (koht[1]+0.5)*veerulaius;
+       }
+       function joonista(){
+           g.clearRect(0, 0, tahvel.width, tahvel.height);
+           reakorgus=parseInt(tahvel.height/ala.length);
+           veerulaius=parseInt(tahvel.width/ala[0].length);
+           for(let rida=0; rida<ala.length; rida++){
+              for(let veerg=0; veerg<ala[0].length; veerg++){
+                  g.fillText(""+ala[rida][veerg], 
+                    (veerg+0.5)*veerulaius, (rida+0.5)*reakorgus);
+              }
+           }
+           if(algVajutus!=null){
+              console.log(algVajutus);
+              g.fillRect((algVajutus[1]+0.3)*veerulaius, 
+                         (algVajutus[0]+0.5)*reakorgus, 5, 5);
+           }
+       }
+       function loeAndmed(){
+   	     let m=document.getElementById("kast1").value
+		     .split('\n');
+	     ala=[];
+	     for(let i=0; i<m.length; i++){
+		   let rida=m[i].split(' ')
+		   for(let j=0; j<rida.length; j++){
+		      rida[j]=parseInt(rida[j]);
+		   }
+		   ala.push(rida);
+		 }
+       }
+	  function kasSees(koht){
+	    return koht[0]>=0 && koht[0]<ala[0].length &&
+		       koht[1]>=0 && koht[1]<ala.length;
+ 	  }
+	  function korvalKohad(koht){
+		let v=[];
+		suunad.forEach(suund => {
+		   uus=[koht[0]+suund[0], koht[1]+suund[1]];
+		   if(kasSees(uus)){v.push(uus);}
+		});
+		return v;
+	  }       
+       function hiireVajutus(e){
+          console.log(e);
+          algVajutus=[parseInt(e.clientY/reakorgus), parseInt(e.clientX/veerulaius)];
+          // leiad kohad kuhu vajutatud kohast on suundade järgi võimalik minna
+          teekond=[algVajutus];
+          parimTeekond=null;
+          joonista();
+       }
+    </script>
+  </head>
+  <body onload="algus()">
+    <canvas id="tahvel" width="400" height="300" onclick="hiireVajutus(event)"></canvas><br />
+        <textarea rows="10" cols="10" id="kast1">1 7 3
+4 6 5
+5 6 3</textarea><br />
+	<input type="button" value="sisesta" 
+	       onclick="uuenda()" />
+	<div id="vastus"></div>
+  </body>
+</html>

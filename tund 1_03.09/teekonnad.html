@@ -1,0 +1,56 @@
+
+<!doctype html>
+<html>
+  <head>
+    <title>Teekonnad</title>
+	<script>
+	    kaart={
+		  "raekoda":["raeapteek", "viruvarav", "niguliste"],
+		  "raeapteek":["raekoda"],
+		  "viruvarav":["raekoda", "draamateater"],
+		  "draamateater":["viruvarav", "vabadusevaljak", "korstnapyhkija"],
+		  "vabadusevaljak":["niguliste", "draamateater", "korstnapyhkija"],
+		  "niguliste":["vabadusevaljak", "korstnapyhkija", "raekoda"],
+		  "korstnapyhkija":["vabadusevaljak", "niguliste", "draamateater"]
+		}
+		function algus(){
+		  let m=Object.keys(kaart);
+		  let s="<select id='valik1' onchange='valiti()'>";
+		  for(let i=0; i<m.length; i++){
+		     s+="<option>"+m[i]+"</option>";
+		  }
+		  s+="</select>";
+		  sisend.innerHTML=s;
+		}
+		
+		let teekond, vastused;
+		function otsi(){
+		   for(let i=0; i<kaart[teekond[teekond.length-1]].length; i++){
+		      teekond.push(kaart[teekond[teekond.length-1]][i]);
+			  if(teekond[0]==teekond[teekond.length-1] && teekond.length==maxpikkus.value){
+			    vastused+=teekond.join("-")+"<br />";
+			  }
+			  //Lisage kontroll, et ei tekiks teekonda, mis oleks olemasolevaga võrreldes täpselt tagurpidi
+			  if(teekond.length<parseInt(maxpikkus.value)){ 
+			     otsi();
+			  }
+			  teekond.pop();
+		   }
+		}
+		//14.15
+		function valiti(){
+           teekond=[valik1.value];
+		   console.log(teekond);
+		   vastused="";
+		   otsi();
+		   vastus.innerHTML=vastused;
+		}
+	</script>
+  </head>
+  <body onload="algus()">
+    <div id="sisend"></div>
+	pikkus:
+	<input type="number" value="4" id="maxpikkus" onchange="valiti()" />
+    <div id="vastus"></div>
+  </body>
+</html>

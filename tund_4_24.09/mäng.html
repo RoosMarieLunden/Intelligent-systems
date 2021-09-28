@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <title>8 mäng</title>
+	<script>
+	   //let uuritud=[];
+	   let tagasitee={};
+	   let loppseis="12345678.";
+	   let sisend="1234.6758";
+	   let puhver=[sisend];
+	   function astu(seis, koht, samm){
+	      let abi=Array.from(seis);
+          abi[koht]=abi[koht+samm];
+          abi[koht+samm]=".";
+		  return abi.join("");
+	   }
+	   function liigu(suund, seis, koht){
+	    if(suund=="yles" && koht<6){return astu(seis, koht, 3);}
+	    if(suund=="alla" && koht>2){return astu(seis, koht, -3);}
+		if(suund=="vasakule" && koht % 3 > 0){
+		  return astu(seis, koht, -1);
+		}
+		if(suund=="paremale" && koht % 3 < 2){
+		  return astu(seis, koht,  1);
+		}
+		 return "";
+	   }
+	   function lubatudSammud(seis){
+	      let koht=seis.indexOf(".");
+	      let v=[
+		           liigu("yles", seis, koht), 
+		           liigu("alla", seis, koht), 
+		           liigu("vasakule", seis, koht), 
+		           liigu("paremale", seis, koht)
+		        ].filter(s => s.length>0);
+		  return v;
+	   }
+  	   //console.log(lubatudSammud(loppseis));
+	   let veel=true;
+       while(puhver && veel){
+	      let uuritav=puhver.shift()
+	      lubatudSammud(uuritav).forEach(seis => {
+		    if(!(seis in tagasitee)){
+		     tagasitee[seis]=uuritav;
+			 console.log(tagasitee);
+			 if(seis==loppseis){
+			   console.log("leitud");
+			   veel=false;
+			 }
+			 puhver.push(seis);
+			}
+		  });
+	   }
+	   console.log(tagasitee);
+	   //Kuvage mööda tagasiteed näidatavad seisud
+	   //Lõppseisust sisendseisuni 
+	   let seis=loppseis
+	   let teekond=[seis];
+	   while(seis!=sisend){
+	      seis=tagasitee[seis];
+		  teekond.push(seis);
+	   }
+	   console.log(teekond);
+	   //pööra teekond ümber
+	   //Kuva vajalikud vaheseisud ning mis suunas oli 
+	   //nende saavutamiseks vaja ruutu liigutada
+	   
+	   
+	</script>
+  </head>
+  <body>
+  
+  </body>
+</html>
