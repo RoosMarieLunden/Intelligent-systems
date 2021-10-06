@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html>
+ <head>
+ <title>Kaart</title>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js"></script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" />
+ <style>
+   body {padding: 0; margin: 0; }
+   html, body { height: 100%; width: 100%;}
+   #kaardikiht {float:bottom; width:100%; height:100%;}
+ </style>
+ <script>
+   var kaart;
+   var seosed={
+		  "raekoda":["raeapteek", "viruvarav", "niguliste"],
+		  "raeapteek":["raekoda"],
+		  "viruvarav":["raekoda", "draamateater"],
+		  "draamateater":["viruvarav", "vabadusevaljak", "korstnapyhkija"],
+		  "vabadusevaljak":["niguliste", "draamateater", "korstnapyhkija"],
+		  "niguliste":["vabadusevaljak", "korstnapyhkija", "raekoda"],
+		  "korstnapyhkija":["vabadusevaljak", "niguliste", "draamateater"]
+		}
+   var asukohad={
+      "raekoda":[59.437141, 24.745008],
+	  "raeapteek":[59.437633, 24.745786],
+	  "viruvarav":[59.436606, 24.749566],
+	  "draamateater":[59.434766, 24.748481],
+	  "vabadusevaljak":[59.433678, 24.744356],
+	  "niguliste":[59.436022, 24.743239],
+	  "korstnapyhkija":[59.435126, 24.746504]
+   };
+   function algus(){
+    kaart = L.map('kaardikiht').setView([59.435126, 24.746504], 15);
+      new L.TileLayer(
+  'https://tiles.maaamet.ee/tm/tms/1.0.0/hybriid@GMC/{z}/{x}/{y}.png&ASUTUS=TLU&ERIALA=DIGIHUMANITAARIA', {
+	  attribution: "Map: <a  href='http://www.maaamet.ee/'>Maa-amet</a>",
+	  tms: true,
+    }).addTo(kaart);
+	let m=Object.keys(asukohad);
+	for(let i=0; i<m.length; i++){
+	   let marker=L.circleMarker(asukohad[m[i]]);
+	   marker.addTo(kaart);
+	}
+    L.polyline([asukohad["korstnapyhkija"], asukohad["draamateater"],asukohad["vabadusevaljak"] ], {opacity:0.5}).addTo(kaart);
+   }
+
+  </script>
+ </head>  
+ <body onload="algus()">
+  <div id="kaardikiht"></div>
+ </body>
+</html>

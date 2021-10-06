@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Teekonnad</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js"></script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" />
+	<script>
+       seosed={
+		  "raekoda":["raeapteek", "viruvarav", "niguliste"],
+		  "raeapteek":["raekoda"],
+		  "viruvarav":["raekoda", "draamateater"],
+		  "draamateater":["viruvarav", "vabadusevaljak", "korstnapyhkija"],
+		  "vabadusevaljak":["niguliste", "draamateater", "korstnapyhkija"],
+		  "niguliste":["vabadusevaljak", "korstnapyhkija", "raekoda"],
+		  "korstnapyhkija":["vabadusevaljak", "niguliste", "draamateater"]
+		}
+		var asukohad={
+		  "raekoda":L.latLng([59.437141, 24.745008]),
+		  "raeapteek":L.latLng([59.437633, 24.745786]),
+		  "viruvarav":L.latLng([59.436606, 24.749566]),
+		  "draamateater":L.latLng([59.434766, 24.748481]),
+		  "vabadusevaljak":L.latLng([59.433678, 24.744356]),
+		  "niguliste":L.latLng([59.436022, 24.743239]),
+		  "korstnapyhkija":L.latLng([59.435126, 24.746504])
+       };
+ 	 let algkoht="raekoda";
+	   function algus(){
+	     console.log(asukohad["raekoda"].distanceTo(asukohad["viruvarav"]));
+		 //Soojenduseks ühe lõigu pikkused teekonnad Raekojast koos pikkustega
+		 for(let i=0; i<seosed["raekoda"].length; i++){
+		    let kuhu=seosed["raekoda"][i];
+			let kuhukoordinaat=asukohad[kuhu];
+		    console.log(kuhu, asukohad["raekoda"].distanceTo(kuhukoordinaat));
+		 }
+		 //Kuva kõik kahe lõigu pikkused (kolme elemendiga) teekonnad alates 
+		 for(let i=0; i<seosed[algkoht].length; i++){
+		     let vahekoht=seosed[algkoht][i];
+			 let vahekaugus=asukohad[algkoht].distanceTo(asukohad[vahekoht]);
+			 for(let j=0; j<seosed[vahekoht].length; j++){
+			   let sihtkoht=seosed[vahekoht][j];
+			   console.log(algkoht+"-"+vahekoht+"-"+sihtkoht, 
+			     vahekaugus+asukohad[vahekoht].distanceTo(asukohad[sihtkoht]));
+			 }
+		 }
+		 //Raekojast (mis ei lõpe raekojas) koos pikkustega meetrites
+		 otsi();
+	   }
+	   let teekond=[algkoht];
+	   let meetrid=0;
+	   let maxpikkus=500;
+	   function otsi(){
+	       let praegunekoht=teekond[teekond.length-1]
+	       for(let i=0; i<seosed[praegunekoht].length; i++){
+		      let uuskoht=seosed[praegunekoht][i];
+			  let vahemaa=asukohad[praegunekoht].distanceTo(asukohad[uuskoht]);
+			  teekond.push(uuskoht);
+			  meetrid+=vahemaa;
+			  console.log(teekond.join("-"), meetrid);
+			  if(meetrid<maxpikkus){			    
+			    otsi();
+			  }
+			  meetrid-=vahemaa;
+			  teekond.pop();
+		   }
+	   }
+	</script>
+  </head>
+  <body onload="algus()">
+  
+  </body>
+</html>

@@ -1,0 +1,118 @@
+
+
+<!doctype html>
+<html>
+  <head>
+    <title>Teekonnad</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js"></script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" />
+ 
+	<script>
+//Ühendage kaart3.html ja teekonnad5.html
+//Kasutaja saab valida alg- ja lõppkoha ning teekonna punktide arvu
+//Vastav teekond näidatakse kaardil
+        let vajutusMeeles=null;
+	    seosed={
+		  "raekoda":["raeapteek", "viruvarav", "niguliste"],
+		  "raeapteek":["raekoda"],
+		  "viruvarav":["raekoda", "draamateater"],
+		  "draamateater":["viruvarav", "vabadusevaljak", "korstnapyhkija"],
+		  "vabadusevaljak":["niguliste", "draamateater", "korstnapyhkija"],
+		  "niguliste":["vabadusevaljak", "korstnapyhkija", "raekoda"],
+		  "korstnapyhkija":["vabadusevaljak", "niguliste", "draamateater"]
+		}
+		var asukohad={
+		  "raekoda":[59.437141, 24.745008],
+		  "raeapteek":[59.437633, 24.745786],
+		  "viruvarav":[59.436606, 24.749566],
+		  "draamateater":[59.434766, 24.748481],
+		  "vabadusevaljak":[59.433678, 24.744356],
+		  "niguliste":[59.436022, 24.743239],
+		  "korstnapyhkija":[59.435126, 24.746504]
+       };
+	   let joon=null;
+	   let joonegrupp=null;
+		function algus(){
+
+		     kaart = L.map('kaardikiht').setView([59.435126, 24.746504], 15);
+      new L.TileLayer(
+  'https://tiles.maaamet.ee/tm/tms/1.0.0/hybriid@GMC/{z}/{x}/{y}.png&ASUTUS=TLU&ERIALA=DIGIHUMANITAARIA', {
+	  attribution: "Map: <a  href='http://www.maaamet.ee/'>Maa-amet</a>",
+	  tms: true,
+    }).addTo(kaart);
+    m=Object.keys(asukohad);
+	for(let i=0; i<m.length; i++){
+	   let marker=L.circleMarker(asukohad[m[i]]);
+	   marker.nimetus=m[i];
+	   marker.addTo(kaart);
+	   marker.on("click", markeriVajutus);
+	}
+    joon=L.polyline([asukohad["korstnapyhkija"], asukohad["draamateater"]], {opacity:0.5});
+	joon.addTo(kaart);
+    joonegrupp=L.layerGroup().addTo(kaart);
+		}
+		function markeriVajutus(m){
+		  console.log(m.target.nimetus);
+		  if(vajutusMeeles==null){vajutusMeeles=m.target.nimetus}
+		  else{
+		     vajutusSihtkoht=m.target.nimetus;
+			 console.log("uus tee ", vajutusMeeles, vajutusSihtkoht);
+			 //Kuva esimene soovitud pikkusega tee kaardil
+			 //joon.setLatLngs([asukohad[vajutusMeeles], asukohad[vajutusSihtkoht]]);
+			 valiti();
+			 console.log(vastused);
+			 joon.setLatLngs(vastused[0].split("-").
+			     map(function(koht){return asukohad[koht]})
+			 );
+			 joonegrupp.clearLayers();
+			 for(let i=1; i<vastused.length; i++){
+			   let k=vastused[i].split("-").map(function(koht){return asukohad[koht]});
+			   L.polyline(k, {color: "gray", opacity:0.2}).addTo(joonegrupp);
+			 }
+			 //Kuva esimene tee automaatselt kaardil
+			 //Kuva ka teised võimalused, aga õrnemalt
+			 vajutusMeeles=null;
+		  }
+		}
+				
+		let teekond, vastused;
+		function otsi(){
+		   for(let i=0; i<seosed[teekond[teekond.length-1]].length; i++){
+		      teekond.push(seosed[teekond[teekond.length-1]][i]);
+			  if(vajutusSihtkoht==teekond[teekond.length-1] && teekond.length==maxpikkus.value){
+			       vastused.push(teekond.join("-"));
+			  }
+			  if(teekond.length<parseInt(maxpikkus.value)){ 
+			     otsi();
+			  }
+			  teekond.pop();
+		   }
+		}
+		function valiti(){
+           teekond=[vajutusMeeles];
+		   console.log(teekond);
+		   vastused=[];
+		   otsi();
+		   let v="";
+		   for(let i=0; i<vastused.length; i++){
+		      v+="<p onmouseover='kuvaVastus(this)'>"+vastused[i]+"</p>"
+		   }
+		   vastus.innerHTML=v;
+		}
+		function kuvaVastus(vastus){
+		  console.log(vastus.innerHTML);
+		  let kohad=vastus.innerHTML.split("-");
+		  let m=kohad.map(function(koht){return asukohad[koht]});
+		  console.log(m);
+		  joon.setLatLngs(m);
+		}
+	</script>
+  </head>
+  <body onload="algus()">
+    <div id="sisend"></div>
+	pikkus:
+	<input type="number" value="4" id="maxpikkus" onchange="valiti()" />
+    <div id="vastus"></div>
+	<div id="kaardikiht" style="width: 600px; height:400px"></div>
+  </body>
+</html>
