@@ -62,6 +62,23 @@
 			 valiti();
 			 console.log(vastused);
 			 joon.setLatLngs(vastused[0].split("-").
+
+			 //
+			 /*    joon=L.polyline([asukohad["korstnapyhkija"], asukohad["draamateater"]], {opacity:0.5});
+	joon.addTo(kaart);
+    joonegrupp=L.layerGroup().addTo(kaart);
+		}
+		function markeriVajutus(m){
+		  console.log(m.target.nimetus);
+		  if(vajutusMeeles==null){vajutusMeeles=m.target.nimetus}
+		  else{
+		     vajutusSihtkoht=m.target.nimetus;
+			 console.log("uus tee ", vajutusMeeles, vajutusSihtkoht);
+			 //Kuva esimene soovitud pikkusega tee kaardil
+			 //joon.setLatLngs([asukohad[vajutusMeeles], asukohad[vajutusSihtkoht]]);
+			 valiti();
+			 console.log(vastused);
+			 joon.setLatLngs(vastused[0].split("-").*/
 			     map(function(koht){return asukohad[koht]})
 			 );
 			 joonegrupp.clearLayers();
