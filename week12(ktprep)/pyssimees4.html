@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+  <head>
+    <script>
+//     let seis1=" P P P P. . . .  . . . .. . . .  . . . .. . . .  . . . .. . J . " //algseis
+//     let seis1=" P P P PJ . . .  P . . .. . . .  . . . .. . . .  . . . .. . . . "; //Jänes kinni
+//     let seis1=" . . . .J . . .  . . . .. . . .  . . . .. . . .  . . . .P P P P "; //Püssimehed kinni
+//     let seis1=" . . . J. . . .  . . . .. . . .  . . . .. . . .  . . . PP P P . "; //Jänes lõpus
+//     let seis1=" P P P PJ . . .  P . . .. . . .  . . . .. . . .  . . . .. . . . "; //Jänes kinni
+//     let seis1=" . . . .J . . .  . . . .. . . .  . . . .. . . .  . . . PP P P . "; //Jänes lõpus
+     let seis1=" P P P ."+
+	           "J . P . "+
+	           " . . . ."+
+			   ". . . . "+
+			   " . . . ."+
+			   ". . . . "+
+			   " . . . ."+
+			   ". . . . "; //Jänes kinni
+	 let janeseSammud=[[-1, -1], [-1, 1], [1, -1], [1, 1]];
+	 let pyssimeheSammud=[[1, -1], [1, 1]];
+	 let puhver={};
+	 function kasVaba(seis, rida, veerg){
+	    if(rida<0 || rida>7 || veerg<0 || veerg>7){return false;}
+		return seis[rida*8+veerg]==".";
+	 }
+	 function kusJanes(seis){
+	    let koht=seis.indexOf("J");
+		return [parseInt(koht/8), koht % 8];
+	 }
+	 function kusPyssimehed(seis){
+	    let v=[];
+		for(let i=0; i<seis.length; i++){
+		   if(seis[i]=="P"){
+		     v.push([parseInt(i/8), i%8]);
+		   }
+		}
+		return v;
+	 }
+	 function kuvaSeis(seis){
+	    let v=""
+	    for(let rida=0; rida<8; rida++){
+		   v+=seis.substring(rida*8, rida*8+8)+"\n";
+		}
+		return v;
+	 }
+
+	 function janeseSeisud(seis){
+        let koht=kusJanes(seis);	 
+	    let v=[];
+	    for(let i=0; i<janeseSammud.length; i++){
+		   let samm=janeseSammud[i];
+		   let uuskoht=[koht[0]+samm[0], koht[1]+samm[1]];
+		   if(kasVaba(seis, uuskoht[0], uuskoht[1])){
+			   let m=seis.split("");
+			   m[uuskoht[0]*8+uuskoht[1]]="J";
+			   m[koht[0]*8+koht[1]]="."
+			   v.push(m.join(""));
+		   }
+		}
+		return v;
+	 }
+
+	 function pyssimeheSeisud(seis){
+	   let kohad=kusPyssimehed(seis);
+	   let v=[];
+	   for(let pnr=0; pnr<kohad.length; pnr++){
+	      let koht=kohad[pnr];
+		  for(let i=0; i<pyssimeheSammud.length; i++){
+		     let samm=pyssimeheSammud[i];
+		     let uuskoht=[koht[0]+samm[0], koht[1]+samm[1]];
+		     if(kasVaba(seis, uuskoht[0], uuskoht[1])){
+			   let m=seis.split("");
+			   m[uuskoht[0]*8+uuskoht[1]]="P";
+			   m[koht[0]*8+koht[1]]="."
+			   v.push(m.join(""));
+		     }			 
+		  }
+	   }
+       return v;	   
+	 }
+
+     function vastane(kes){return (kes=="J")?"P":"J";}
+     function seisuHinnang(seis, kes){  // 1: jänese võit, -1: püssimehe võit
+	    //Kui on jänese käik ning jänesel pole kuhugile käia, siis on püssimehe võit
+		let rasi=seis+"_"+kes;
+	  if(!(rasi in puhver)){
+		if(kes=="J"){
+		   let alamseisud=janeseSeisud(seis);
+		   if(alamseisud.length==0){return -1;}
+		   let hinnangud=[];
+		   for(let i=0; i<alamseisud.length; i++){
+		      let hinnang=seisuHinnang(alamseisud[i], "P");
+			  hinnangud.push(hinnang);
+              if(hinnang==1){break;}			  
+		   }
+		   puhver[rasi]=Math.max(...hinnangud);
+		}
+		if(kes=="P"){
+		   if(kusJanes(seis)[0]==0){return 1;}
+		   let alamseisud=pyssimeheSeisud(seis);
+		   if(alamseisud.length==0){return 1;}
+		   //Leidke püssimehe parim hinnang
+		   let hinnangud=[];
+		   for(let i=0; i<alamseisud.length; i++){
+		      let hinnang=seisuHinnang(alamseisud[i], "J");
+			  hinnangud.push(hinnang);	
+              if(hinnang==-1){break;}			  
+		   }
+		   puhver[rasi]=Math.min(...hinnangud);
+		}
+	   }
+	   return puhver[rasi];
+	 }
+	 
+	 function pyssimeheParimKaik(seis){
+	   let alamseisud=pyssimeheSeisud(seis);
+	   let parimSeis=alamseisud[0];
+	   let parimHinnang=seisuHinnang(parimSeis, "J");
+	   for(let i=1; i<alamseisud.length; i++){
+	      let hinnang=seisuHinnang(alamseisud[i], "J");
+		  if(hinnang<parimHinnang){
+		     parimSeis=alamseisud[i];
+			 parimHinnang=hinnang;
+		  }
+	   }
+	   return parimSeis;
+	 }
+
+     console.log(seisuHinnang(seis1, "P"))
+     console.log(kuvaSeis(pyssimeheParimKaik(seis1)))
+	 function vajutus(){
+	    let seis2=document.getElementById("kast1").value.replaceAll("\n", "");
+		console.log(seis2);
+		document.getElementById("kast1").value=kuvaSeis(pyssimeheParimKaik(seis2));
+	 }
+	</script>
+  </head>
+  <body onload="kast1.value=kuvaSeis(seis1);">
+    <textarea id="kast1" rows="12" cols="12"></textarea>
+	<input type="button" value="Sisesta" onclick="vajutus()" />
+  </body>
+</html>
