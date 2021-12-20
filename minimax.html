@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+	<head>
+	<title>nupu tõstmise mäng</title>
+	
+		<script>
+			const maxKaugus=21;
+			function vastane(kes) {return (kes=="a")?"i":"a";}
+			function kaik(kaugus, kes) {//inimene -1 +1 arvuti võit
+			  if(kaugus>10){return (kes=="a")?1:-1;}
+			  let hinnang1=seisuHinnang(kaugus+1, vastane(kes));
+			  let hinnang1=seisuHinnang(kaugus+2, vastane(kes));
+			  return(kes =="a")?Math.max(hinnang1, hinnang2):Math.min(hinnang1, hinnang2);
+			}
+			function mituSammu{
+				let hinnangud=leiaHinnangund(kaugus, a)
+				let suurimakoha=
+				let uusKaugus=alamseisud(kaugus)[suurimakoht];
+			    console.log(hinnangud, suurimaKoht, kaugus)
+				return uusKaugus-kaugus;
+			}
+			function seisuHinnang(kaugus, kes){
+			 if(kaugus>=maxKaugus-maxKaik)(return kes=="a")?1:-1}
+			let hinnangud=leiaHinnangund(kaugus,kes);
+			function kaugus(){return seisuHinnang(kaugus, vastane(kes));};
+			return(kes=="a")?Math.max(...hinnangud):Math.min(...hinnangud);
+			}
+			function leiaHinnangund(kaugus, kes){
+				return alamseisud(kaugus).map(
+				function(uuskaugus){return seisuHinnang(uuskaugus, vastane(kes));));
+				}
+				
+				)
+				
+				}
+			}
+			console.log(seisuHinnang(14,"a"));
+			console.log(mituSammu(14));
+			console.log(alamseisud(10));
+		</script>
+	</head>
+	
+	<body>
+	<h1>"mitu sammu astud"</h1>
+	<button onclick="samm()">1 samm</button> 
+	<button onclick="samm2()">2 sammu</button>
+	</body>
+
+	<h2><div>1</div><div>2</div><div>3</div> <div>4</div> <div>5</div> ><div>1</div>><div>1</div>><div>1</div>><div>1</div>><div>1</div>><div>1</div>><div>1</div>><div>1</div> 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21</h2>
+	
+</html>
